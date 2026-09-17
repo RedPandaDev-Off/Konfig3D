@@ -1,4 +1,4 @@
-# Configurateur React
+# Konfig3D
 
 Réécriture configurateur 3D (vanilla JS + Three.js) en React, dans un but de remise a niveau
 
@@ -56,7 +56,7 @@ src/
 
 1. Finir de brancher `Panel` dans `createTable`/`updateTable` (y compris la question de comment `updateTable` retrouve une instance `Panel`, pas juste un mesh brut, via `getObjectByName`).
 2. Étendre à d'autres types de meubles.
-3. Ambition finale : comprendre puis porter le vrai moteur du projet original (`objclass/BaseElement.js`, `panel.js`, `zone.js`, `constantes.js`) une fois les bases suffisamment solides.
+
 
 ## Notes d'apprentissage
 
