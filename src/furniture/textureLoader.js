@@ -3,6 +3,20 @@ import * as THREE from "three";
 const textureLoader = new THREE.TextureLoader();
 const cache = new Map();
 
+    export function applyRepeat(mat, repeatX, repeatY) {
+      mat.userData.repeat = [repeatX, repeatY];
+      [mat.map, mat.normalMap, mat.roughnessMap].forEach((tex) => {
+        if (!tex) return;
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(repeatX, repeatY);
+        tex.needsUpdate = true;
+      });
+    }
+
+    
+  
+
 export function loadTextureSet(entry) {
   if (cache.has(entry.id)) return cache.get(entry.id);
   const colorMap = textureLoader.load(entry.colorMap);
@@ -43,5 +57,7 @@ export function setTableTexture(table, entry) {
       mat.roughnessMap = clonedRoughness;
       mat.needsUpdate = true;
     });
+
+    
   });
 }

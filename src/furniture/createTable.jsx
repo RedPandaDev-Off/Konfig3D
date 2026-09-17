@@ -1,19 +1,11 @@
 import * as THREE from "three";
 import { TEXTURES } from "./textures";
-import { loadTextureSet } from "./textureLoader";
+import { loadTextureSet , applyRepeat} from "./textureLoader";
+import Panel from "./Panel";
 
 const textureSize = 0.5;
 
-function applyRepeat(mat, repeatX, repeatY) {
-  mat.userData.repeat = [repeatX, repeatY];
-  [mat.map, mat.normalMap, mat.roughnessMap].forEach((tex) => {
-    if (!tex) return;
-    tex.wrapS = THREE.RepeatWrapping;
-    tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(repeatX, repeatY);
-    tex.needsUpdate = true;
-  });
-}
+
 
 function makeFaceMaterial(map, normalMap, roughnessMap, repeatX, repeatY) {
   const mat = new THREE.MeshStandardMaterial({
@@ -30,7 +22,6 @@ export function createTable({ width, height, depth, color, textureIndex = 0 }) {
   const legThickness = 0.1;
   const legHeight = height - tabletopThickness;
 
-  const tabletopGeometry = new THREE.BoxGeometry(width, tabletopThickness, depth);
   const legGeometry = new THREE.BoxGeometry(legThickness, legHeight, legThickness);
 
   const entry = TEXTURES[textureIndex];
@@ -43,14 +34,19 @@ export function createTable({ width, height, depth, color, textureIndex = 0 }) {
 
   const table = new THREE.Group();
 
-  const tabletop = new THREE.Mesh(tabletopGeometry, [
-    edgeMaterialLR, edgeMaterialLR, // +x, -x (tranches gauche/droite)
-    faceMaterial, faceMaterial,     // +y, -y (dessus/dessous)
-    edgeMaterialFB, edgeMaterialFB, // +z, -z (tranches avant/arrière)
-  ]);
-  tabletop.name = "tabletop";
-  tabletop.position.y = tabletopThickness / 2;
-  table.add(tabletop);
+  const tabletop = new Panel({
+    width,
+    height: tabletopThickness,
+    depth,
+    material: [
+      edgeMaterialLR, edgeMaterialLR, // +x, -x (tranches gauche/droite)
+      faceMaterial, faceMaterial,     // +y, -y (dessus/dessous)
+      edgeMaterialFB, edgeMaterialFB, // +z, -z (tranches avant/arrière)
+    ],
+    name: "tabletop",
+  });
+  tabletop.setPosition(0, tabletopThickness / 2, 0);
+  table.add(tabletop.mesh);
 
   const legOffsetX = width / 2 - legThickness / 2;
   const legOffsetZ = depth / 2 - legThickness / 2;
