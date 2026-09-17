@@ -62,4 +62,8 @@ src/
 
 - Le double-montage de `React.StrictMode` en dev peut interrompre le chargement d'images volumineuses (texture PBR) — comportement dev-only, absent en production (`npm run build && npm run preview`).
 - `THREE.Mesh` accepte un tableau de matériaux (un par face de `BoxGeometry`, ordre `[+x, -x, +y, -y, +z, -z]`) — utile pour donner une texture différente aux tranches d'un panneau.
-- Un objet dont le `repeat` de texture est mal calculé par rapport à ses proportions réelles paraît étiré — c'est pour ça que le projet original sépare texture de face et couleur de chant 
+- Un objet dont le `repeat` de texture est mal calculé par rapport à ses proportions réelles paraît étiré — c'est pour ça que le projet original sépare texture de face et couleur de chant (`COLOR_CHANT`).
+
+## Licence
+
+[MIT](LICENSE) 
