@@ -47,7 +47,7 @@ src/
 ## État actuel
 
 - Scène Three.js montée dans un composant React (`useRef` + `useEffect`), avec `OrbitControls` et redimensionnement automatique du canvas (`ResizeObserver`).
-- Dimensions (largeur/hauteur/profondeur), couleur (teinte) et texture pilotées depuis un store Zustand, appliquées en temps réel à la scène.
+- Dimensions (largeur/hauteur/profondeur) texture pilotées depuis un store Zustand, appliquées en temps réel à la scène.
 - Table assemblée à partir de plusieurs pièces (`THREE.Group`), chacune retrouvable via `getObjectByName`.
 - Textures PBR (color/normal/roughness) chargées depuis ambientCG, avec un `repeat` calculé séparément par surface (face du plateau, tranches, pieds) pour éviter l'étirement.
 - Classe `Panel` en cours d'intégration pour factoriser la création répétitive de chaque pièce (géométrie + matériau + mesh + nom + position + resize).
