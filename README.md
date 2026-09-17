@@ -1,6 +1,6 @@
 # Configurateur React
 
-Réécriture configurateur 3D (vanilla JS + jQuery + Three.js) en React, dans un but de remise a niveau: comprendre la structure du projet original en reconstruisant ses mécanismes un par un, avec des outils modernes (React, Zustand, Vite).
+Réécriture configurateur 3D (vanilla JS + Three.js) en React, dans un but de remise a niveau
 
 ## Stack
 
