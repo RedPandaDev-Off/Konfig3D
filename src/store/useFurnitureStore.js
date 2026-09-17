@@ -15,6 +15,9 @@ setColor: (value) => set ({color :value}),
 
 furnitureType: 'cube',
 setFurnitureType: (value) => set({ furnitureType: value }),
+
+textureIndex: 0,
+setTextureIndex: (value) => set({ textureIndex: value }),
 }))
 
 export default useFurnitureStore

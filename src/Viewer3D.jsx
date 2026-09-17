@@ -4,6 +4,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import useFurnitureStore from "./store/useFurnitureStore";
 import Stats from "stats.js";
 import { createTable, updateTable } from "./furniture/createTable";
+import { setTableTexture } from "./furniture/textureLoader";
+import { TEXTURES } from "./furniture/textures";
 function Viewer3D() {
   const containerRef = useRef(null);
   const boxWidth = useFurnitureStore((state) => state.boxWidth);
@@ -12,6 +14,7 @@ function Viewer3D() {
   const cubeRef = useRef(null);
   const color = useFurnitureStore((state) => state.color);
   const furnitureType = useFurnitureStore((state) => state.furnitureType);
+  const textureIndex = useFurnitureStore((state) => state.textureIndex);
 
 
   useEffect(() => {
@@ -37,7 +40,7 @@ function Viewer3D() {
 
 
 
-const table = createTable({ width: boxWidth, height: boxHeight, depth: boxDepth, color });
+const table = createTable({ width: boxWidth, height: boxHeight, depth: boxDepth, color, textureIndex });
 cubeRef.current = table;
 scene.add(table);
 
@@ -81,10 +84,13 @@ return () => {
   controls.dispose();
   container.removeChild(renderer.domElement);
   renderer.dispose();
-  table.traverse((child) => {
-    if (child.geometry) child.geometry.dispose();
-    if (child.material) child.material.dispose();
-  });
+table.traverse((child) => {
+  if (child.geometry) child.geometry.dispose();
+  if (child.material) {
+    const materials = Array.isArray(child.material) ? child.material : [child.material];
+    materials.forEach((mat) => mat.dispose());
+  }
+});
   container.removeChild(stats.dom);
 };
   }, []);
@@ -97,10 +103,19 @@ useEffect(() => {
 useEffect(() => {
   if (cubeRef.current) {
     cubeRef.current.traverse((child) => {
-      if (child.material) child.material.color.set(color);
+      if (!child.material) return;
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      materials.forEach((mat) => {
+        if (mat.color) mat.color.set(color);
+      });
     });
   }
 }, [color]);
+useEffect(() => {
+  if (cubeRef.current) {
+    setTableTexture(cubeRef.current, TEXTURES[textureIndex]);
+  }
+}, [textureIndex]);
   return <div ref={containerRef} className="absolute inset-0" />;
 }
 

@@ -1,6 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import useFurnitureStore from '../store/useFurnitureStore'
+import { TEXTURES } from '../furniture/textures'
 
 function DimensionField({ id, label, value, onChange, min = 1, type = "number" }) {
   return (
@@ -36,7 +37,8 @@ function DimensionPanel() {
   const setColor=useFurnitureStore((state) => state.setColor)
   const furnitureType = useFurnitureStore((state) => state.furnitureType)
   const setFurnitureType = useFurnitureStore((state) => state.setFurnitureType)
-
+  const textureIndex = useFurnitureStore((state) => state.textureIndex)
+const setTextureIndex = useFurnitureStore((state) => state.setTextureIndex)
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1.5">
@@ -82,6 +84,22 @@ function DimensionPanel() {
         />
       </div>
       <div className='flex flex-col gap-4'>
+
+<div className="flex flex-col gap-1.5">
+  <label htmlFor="texture" className="text-sm font-semibold text-foreground">
+    Texture
+  </label>
+  <select
+    id="texture"
+    value={textureIndex}
+    onChange={(e) => setTextureIndex(Number(e.target.value))}
+    className="rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm"
+  >
+    {TEXTURES.map((tex, i) => (
+      <option key={tex.id} value={i}>{tex.label}</option>
+    ))}
+  </select>
+</div>
 {/*<DimensionField
 type="color"
   id="color"
