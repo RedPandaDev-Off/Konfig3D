@@ -3,13 +3,16 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import useFurnitureStore from "./store/useFurnitureStore";
 import Stats from "stats.js";
-
+import { createTable, updateTable } from "./furniture/createTable";
 function Viewer3D() {
   const containerRef = useRef(null);
   const boxWidth = useFurnitureStore((state) => state.boxWidth);
   const boxDepth = useFurnitureStore((state) => state.boxDepth);
   const boxHeight = useFurnitureStore((state) => state.boxHeight);
   const cubeRef = useRef(null);
+  const color = useFurnitureStore((state) => state.color);
+  const furnitureType = useFurnitureStore((state) => state.furnitureType);
+
 
   useEffect(() => {
     const container = containerRef.current;
@@ -32,13 +35,11 @@ function Viewer3D() {
     light.position.set(-1, 2, 4);
     scene.add(light);
 
-    const geometry = new THREE.BoxGeometry(boxDepth, boxHeight, boxWidth);
 
-    const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
 
-    const cubeTest = new THREE.Mesh(geometry, material);
-    cubeRef.current = cubeTest; // ajoute cette ligne
-    scene.add(cubeTest);
+const table = createTable({ width: boxWidth, height: boxHeight, depth: boxDepth, color });
+cubeRef.current = table;
+scene.add(table);
 
     const renderer = new THREE.WebGLRenderer({alpha: true});
     containerRef.current.appendChild(renderer.domElement);
@@ -65,8 +66,8 @@ function Viewer3D() {
     function animate() {
       stats.begin();
 
-      //cubeTest.rotation.x += 0.01
-      //cubeTest.rotation.y += 0.01
+      //mesh.rotation.x += 0.01
+      //mesh.rotation.y += 0.01
       controls.update();
       renderer.render(scene, camera);
       stats.end();
@@ -74,29 +75,32 @@ function Viewer3D() {
     }
     animationId = requestAnimationFrame(animate);
 
-    return () => {
-      cancelAnimationFrame(animationId);
-      resizeObserver.disconnect();
-      controls.dispose();
-      container.removeChild(renderer.domElement);
-      renderer.dispose();
-      geometry.dispose();
-      material.dispose();
-      container.removeChild(stats.dom);
-    };
+return () => {
+  cancelAnimationFrame(animationId);
+  resizeObserver.disconnect();
+  controls.dispose();
+  container.removeChild(renderer.domElement);
+  renderer.dispose();
+  table.traverse((child) => {
+    if (child.geometry) child.geometry.dispose();
+    if (child.material) child.material.dispose();
+  });
+  container.removeChild(stats.dom);
+};
   }, []);
-  useEffect(() => {
-    if (cubeRef.current) {
-      const oldGeometry = cubeRef.current.geometry;
-      cubeRef.current.geometry = new THREE.BoxGeometry(
-        boxWidth,
-        boxHeight,
-        boxDepth,
-      );
-      oldGeometry.dispose();
-    }
-  }, [boxWidth, boxHeight, boxDepth]);
 
+useEffect(() => {
+  if (cubeRef.current) {
+    updateTable(cubeRef.current, { width: boxWidth, height: boxHeight, depth: boxDepth });
+  }
+}, [boxWidth, boxHeight, boxDepth]);
+useEffect(() => {
+  if (cubeRef.current) {
+    cubeRef.current.traverse((child) => {
+      if (child.material) child.material.color.set(color);
+    });
+  }
+}, [color]);
   return <div ref={containerRef} className="absolute inset-0" />;
 }
 

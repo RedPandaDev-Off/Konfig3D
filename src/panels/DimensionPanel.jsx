@@ -2,22 +2,24 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import useFurnitureStore from '../store/useFurnitureStore'
 
-function DimensionField({ id, label, value, onChange, min = 1 }) {
+function DimensionField({ id, label, value, onChange, min = 1, type = "number" }) {
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
       <div className="relative">
         <Input
           id={id}
-          type="number"
+          type={type}
           min={min}
           value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="pr-10"
+          onChange={(e) => onChange(e.target.value)}
+          className={type === "number" ? "pr-10" : ""}
         />
-        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
-          mm
-        </span>
+        {type === "number" && (
+          <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+            mm
+          </span>
+        )}
       </div>
     </div>
   )
@@ -29,10 +31,29 @@ function DimensionPanel() {
   const boxDepth = useFurnitureStore((state) => state.boxDepth)
   const setBoxDepth = useFurnitureStore((state) => state.setBoxDepth)
   const boxHeight = useFurnitureStore((state) => state.boxHeight)
-  const setBoxHeight = useFurnitureStore((state) => state.setboxHeight)
+  const setBoxHeight = useFurnitureStore((state) => state.setBoxHeight)
+  const color = useFurnitureStore((state) => state.color)
+  const setColor=useFurnitureStore((state) => state.setColor)
+  const furnitureType = useFurnitureStore((state) => state.furnitureType)
+  const setFurnitureType = useFurnitureStore((state) => state.setFurnitureType)
 
   return (
     <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="furnitureType" className="text-sm font-semibold text-foreground">
+          Type de meuble
+        </label>
+        <select
+          id="furnitureType"
+          value={furnitureType}
+          onChange={(e) => setFurnitureType(e.target.value)}
+          className="rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm"
+        >
+          <option value="cube">Cube</option>
+          <option value="sphere">Sphère</option>
+        </select>
+      </div>
+
       <div>
         <p className="text-sm font-semibold text-foreground">Dimensions</p>
         <p className="text-sm text-muted-foreground">
@@ -59,6 +80,18 @@ function DimensionPanel() {
           value={boxHeight}
           onChange={setBoxHeight}
         />
+      </div>
+      <div className='flex flex-col gap-4'>
+{/*<DimensionField
+type="color"
+  id="color"
+  label="color"
+  value={color}
+  onChange={setColor}
+/>
+      </div>
+      <div>
+        */}
       </div>
     </div>
   )

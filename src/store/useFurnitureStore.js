@@ -8,8 +8,13 @@ const useFurnitureStore = create((set) => ({
   setBoxDepth: (value) => set({ boxDepth: value }),
 
   boxHeight:1,
-  setboxHeight: (value) => set({boxHeight:value}),
+  setBoxHeight: (value) => set({boxHeight:value}),
 
+color:'0xffffff',
+setColor: (value) => set ({color :value}),
+
+furnitureType: 'cube',
+setFurnitureType: (value) => set({ furnitureType: value }),
 }))
 
 export default useFurnitureStore
