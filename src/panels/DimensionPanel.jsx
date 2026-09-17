@@ -1,36 +1,65 @@
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import useFurnitureStore from '../store/useFurnitureStore'
+
+function DimensionField({ id, label, value, onChange, min = 1 }) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          type="number"
+          min={min}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="pr-10"
+        />
+        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-muted-foreground">
+          mm
+        </span>
+      </div>
+    </div>
+  )
+}
 
 function DimensionPanel() {
   const boxWidth = useFurnitureStore((state) => state.boxWidth)
   const setBoxWidth = useFurnitureStore((state) => state.setBoxWidth)
-  const boxDepth = useFurnitureStore((state)=> state.boxDepth)
-  const setboxDepth = useFurnitureStore((state) => state.setBoxDepth)
-  const boxHeight = useFurnitureStore((state)=> state.boxHeight)
-  const setboxHeight = useFurnitureStore((state)=> state.setboxHeight)
+  const boxDepth = useFurnitureStore((state) => state.boxDepth)
+  const setBoxDepth = useFurnitureStore((state) => state.setBoxDepth)
+  const boxHeight = useFurnitureStore((state) => state.boxHeight)
+  const setBoxHeight = useFurnitureStore((state) => state.setboxHeight)
 
   return (
-    <div>
-        <label htmlFor='boxDepth'>Depth</label>
-        <input
-        id="boxDepth"
-        type='slider'
-        value={boxDepth}
-        onChange={(e) => setboxDepth(Number(e.target.value))}
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="text-sm font-semibold text-foreground">Dimensions</p>
+        <p className="text-sm text-muted-foreground">
+          Ajustez les mesures du meuble.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <DimensionField
+          id="boxWidth"
+          label="Largeur"
+          value={boxWidth}
+          onChange={setBoxWidth}
         />
-                <label htmlFor='boxHeight'>boxHeight</label>
-        <input
-        id="boxHeight"
-        type='slider'
-        value={boxHeight}
-        onChange={(e) => setboxHeight(Number(e.target.value))}
+        <DimensionField
+          id="boxDepth"
+          label="Profondeur"
+          value={boxDepth}
+          onChange={setBoxDepth}
         />
-      <label htmlFor="boxWidth">Largeur</label>
-      <input
-        id="boxWidth"
-        type="number"
-        value={boxWidth}
-        onChange={(e) => setBoxWidth(Number(e.target.value))}
-      />
+        <DimensionField
+          id="boxHeight"
+          label="Hauteur"
+          value={boxHeight}
+          onChange={setBoxHeight}
+        />
+      </div>
     </div>
   )
 }
